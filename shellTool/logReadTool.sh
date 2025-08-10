@@ -1,13 +1,16 @@
 #!/bin/bash
 set -e
 
-LOG_FILE="/home/jan/2025hw/shellTool/logs.log"
+#LOG_FILE="/home/jan/2025hw/shellTool/logs.log"
+LOG_FILE=$1
 
 LOG_COUNT=$(grep -v '^$' $LOG_FILE | wc -l)
 
-LOG_HOST="debian"
+#LOG_HOST="debian"
+LOG_HOST=$2
 
-LOG_PORT=514
+#LOG_PORT=514
+LOG_PORT=$3
 
 echo "$LOG_COUNT log lines found"
 
@@ -21,5 +24,5 @@ while IFS= read -r line || [ -n "$line" ]; do
     logger -n $LOG_HOST -P $LOG_PORT "$line"
     echo "Sent line: $COUNT"
     ((COUNT++))
-    
+
 done < $LOG_FILE
