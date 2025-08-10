@@ -15,6 +15,7 @@ Once the execution right have been assigned, the programme needs to be used with
 ```
 ./logReadTool.sh "/home/jan/2025hw/shellTool/logs.log" debian 514
 ```
+![Image showing the Log Reading Tool the count of found logs and the progress on sending those.](./../img/logReadTool.png)
 
 ## Explanation
 The author initially wanted to create this tool using Python, since they are more familiar with the language and have created plenty of scripts and small applications using it. The idea of creating the application as Bash script posed as an interesting challenge to the author and thus they decided to create the tool using Bash.
