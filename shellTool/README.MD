@@ -6,12 +6,12 @@ The goal of this tool is to read logs from a given file and to send those logs t
 
 ## Using the tool
 
-In order to be able to use the tool, the script needs to be given execution right:
+In order to be able to use the tool, the script needs to be given execution rights:
 ```
 chmod +x ./logReadTool.sh
 ```
 
-Once the execution right have been assigned, the programme needs to be used with the **log file** full path, **destination host** and **destination port**. An example looks like the following:
+Once the execution rights have been assigned, the programme needs to be used with the **log file** full path, **destination host** and **destination port**. An example looks like the following:
 ```
 ./logReadTool.sh "/home/jan/2025hw/shellTool/logs.log" debian 514
 ```
