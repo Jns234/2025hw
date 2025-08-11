@@ -1,0 +1,25 @@
+version: '3'
+services:
+  rsyslog:
+    build: 
+      context: ./rsyslog/
+      dockerfile: Dockerfile
+    ports:
+      - "514:514/udp"
+      - "514:514/tcp"
+    restart: always
+    networks:
+      - syslog-net
+  fluent:
+    build: 
+      context: ./fluent-bit/
+      dockerfile: Dockerfile
+    ports:
+      - "515:515/udp"
+    restart: always
+    networks:
+      - syslog-net
+networks:
+  syslog-net:
+    ipam:
+      driver: default

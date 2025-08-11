@@ -1,0 +1,23 @@
+[SERVICE]
+    Flush        1
+    Daemon       Off
+    Log_Level    info
+    Parsers_File parsers.conf
+
+[INPUT]
+    Name         udp
+    Listen       0.0.0.0
+    Port         515
+    Format       json
+
+[OUTPUT]
+    Name            azure_logs_ingestion
+    Match           *
+    client_id       d4114a04-3c29-478c-bbbb-6e61bc5620ff
+    client_secret   "{{ password }}"
+    tenant_id       60de868c-e210-483f-9be3-490593ef9d52
+    dce_url         https://log-ingestion-mdce-ool4.northeurope-1.ingest.monitor.azure.com
+    dcr_id          dcr-492308bd98e74c708c77077b4f9f85f5
+    table_name      Ingested_CL
+    time_generated  true
+    time_key        Time

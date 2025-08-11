@@ -1,0 +1,26 @@
+- hosts: '*'
+  become: yes
+  tasks:
+    - name: Create the docker folder
+      ansible.builtin.file:
+        path: /home/syslogserver/syslog-docker
+        state: directory
+    - name: Copy the docker files to the source folder
+      ansible.builtin.copy:
+        src: "./../../{{ item }}"
+        dest: "/home/syslogserver/syslog-docker/{{ item }}"
+        force: True
+      loop:
+        - 'docker-compose.yaml'
+        - 'rsyslog/'
+        - 'fluent-bit/'
+    - name: create and deploy docker compose services
+      community.docker.docker_compose_v2:
+        project_src: /home/syslogserver/syslog-docker/
+        files: docker-compose.yaml
+      tags: create
+    - name: create and deploy docker compose services
+      community.docker.docker_compose_v2:
+        project_src: /home/syslogserver/syslog-docker/
+        state: absent
+      tags: destroy
