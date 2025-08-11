@@ -7,6 +7,8 @@ services:
     ports:
       - "514:514/udp"
       - "514:514/tcp"
+    volumes:
+      - /sb:/sb
     restart: always
     networks:
       - syslog-net
