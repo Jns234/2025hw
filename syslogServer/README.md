@@ -15,3 +15,5 @@ sudo docker run --name rsyslog -d -p 514:514/udp docker.io/library/rsyslogserver
 ```
 
 This will run a detached container which is named rsyslog using the created Docker image and map both external and internal ip's to 514 using udp.
+
+ansible-playbook ./playbooks/docker.yaml --user syslogserver --ask-become-pass -i ./inventory/hosts.yaml --tags create

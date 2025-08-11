@@ -17,7 +17,7 @@ services:
       context: ./fluent-bit/
       dockerfile: Dockerfile
     ports:
-      - "515:515/udp"
+      - "515:515/tcp"
     restart: always
     networks:
       - syslog-net
