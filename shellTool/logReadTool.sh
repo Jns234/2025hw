@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-#LOG_FILE="/home/jan/2025hw/shellTool/logs.log"
+#LOG_FILE="/mnt/c/Users/Jan/Desktop/2025hw/shellTool/logs.log"
 LOG_FILE=$1
-
-LOG_COUNT=$(grep -v '^$' $LOG_FILE | wc -l)
+#LOG_COUNT=grep -v '^$' $LOG_FILE | wc -l 
+LOG_COUNT=$(grep -c '^[^#]' $LOG_FILE)
 
 #LOG_HOST="debian"
 LOG_HOST=$2
