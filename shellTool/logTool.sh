@@ -35,7 +35,7 @@ CheckHostAvailable() {
 }
 
 CheckHostPortAvailable() {
-    if ! netcat -z -w5 $1 $2; then
+    if ! netcat -u -z -w5 $1 $2 &> /dev/null && ! netcat -z -w5 $1 $2 &> /dev/null; then
         echo "Host $1 with port $2 not reachable"
         exit
     else
@@ -51,6 +51,7 @@ SendLinesTCP(){
     logger -n $hostAddress -P $hostPort "$line"
 }
 
+COUNT=1
 ReadLinesWithEmpty() {
     while IFS= read -r line || [ -n "$line" ]; do
         case $2 in
@@ -64,6 +65,8 @@ ReadLinesWithEmpty() {
                 echo "Error: Invalid option"
                 exit;;
         esac
+        echo "$COUNT lines sent"
+        ((COUNT++))
     done < "$1"
 }
 
@@ -84,6 +87,8 @@ ReadLinesNonEmpty() {
                 echo "Error: Invalid option"
                 exit;;
         esac
+        echo "$COUNT lines sent"
+        ((COUNT++))
     done < "$1"
 }
 
@@ -122,6 +127,7 @@ if ! ((${#hostAddress[@]})) || ! ((${#hostPort[@]})) || ! ((${#FilePath[@]})); t
     echo "Some flag is missing, -a host address, -p host port and -f file flags are mandatory, use the -h flag to find out more!"
     exit
 elif ! ((${#Protocol[@]})) || [ "$Protocol" = "udp" ]; then
+    echo "Sending as default, udp."
     case $NoEmtpy in
         true) # Send the logs without lines starting in newlines
              ReadLinesNonEmpty $FilePath udp
@@ -130,8 +136,8 @@ elif ! ((${#Protocol[@]})) || [ "$Protocol" = "udp" ]; then
              ReadLinesWithEmpty $FilePath udp
              ;;
     esac
-    echo "Sending as default, udp."
 elif [ "$Protocol" = "tcp" ]; then
+    echo "Sending with tcp."
     case $NoEmtpy in
         true) # Send the logs without lines starting in newlines
              ReadLinesNonEmpty $FilePath tcp
@@ -140,8 +146,4 @@ elif [ "$Protocol" = "tcp" ]; then
              ReadLinesWithEmpty $FilePath tcp
              ;;
     esac
-    echo "Sending with tcp."
 fi
-
-
-echo "$hostAddress"
