@@ -1,0 +1,12 @@
+---
+- hosts: syslog_server
+  become: true 
+  tasks:
+    - name: Create the syslog user
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: Add sysloguser to the docker group
+      ansible.builtin.user:
+        name: sysloguser
+        group: docker

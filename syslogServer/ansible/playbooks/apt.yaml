@@ -1,4 +1,4 @@
-- hosts: '*'
+- hosts: syslog_server
   become: yes
   tasks:
     - name: apt

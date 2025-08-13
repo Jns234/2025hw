@@ -1,26 +1,53 @@
-- hosts: '*'
+- hosts: syslog_server
+  vars_files:
+    - ./../group_vars/secrets.yaml
   become: yes
+  become_user: sysloguser
   tasks:
-    - name: Create the docker folder
+    - name: Adding user sysloguser 
+      user: name=sysloguser
+            group=docker
+            append=yes
+    - name: Create the docker folders
       ansible.builtin.file:
-        path: /home/syslogserver/syslog-docker
+        path: "{{ item }}"
         state: directory
+      loop:
+        - /home/sysloguser/syslog-docker/fluent-bit/conf/
+        - /home/sysloguser/syslog-docker/rsyslog/
+      tags: 
+        - propagate 
+        - redeploy 
     - name: Copy the docker files to the source folder
       ansible.builtin.copy:
         src: "./../../{{ item }}"
-        dest: "/home/syslogserver/syslog-docker/{{ item }}"
+        dest: "/home/sysloguser/syslog-docker/{{ item }}"
         force: True
       loop:
         - 'docker-compose.yaml'
         - 'rsyslog/'
         - 'fluent-bit/'
-    - name: create and deploy docker compose services
+      tags: 
+        - propagate 
+        - redeploy 
+    - name: Copy the fluent template
+      ansible.builtin.template:
+        src: "./../../fluent-bit/conf/fluent-bit.conf.j2"
+        dest: "/home/sysloguser/syslog-docker/fluent-bit/conf/fluent-bit.conf"
+        force: True
+      tags: 
+        - propagate 
+        - redeploy 
+    - name: Destroy docker compose services
       community.docker.docker_compose_v2:
-        project_src: /home/syslogserver/syslog-docker/
-        files: docker-compose.yaml
-      tags: create
-    - name: create and deploy docker compose services
-      community.docker.docker_compose_v2:
-        project_src: /home/syslogserver/syslog-docker/
+        project_src: /home/sysloguser/syslog-docker/
         state: absent
-      tags: destroy
+      tags: destroy 
+    - name: create and deploy docker compose services
+      community.docker.docker_compose_v2:
+        project_src: /home/sysloguser/syslog-docker/
+        files: docker-compose.yaml
+        build: always
+      tags: 
+        - create 
+        - redeploy 
