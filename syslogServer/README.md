@@ -1,7 +1,17 @@
 # Syslog Server
 
+## Rsyslog, Fluent Bit and Containerization
+The main services that will handle the storage and forwarding of the logs will be rsyslog and fluent bit. Rsyslog is an industry standard and has a lot of support, guides and info about it. Fluent Bit, not to be confused with Fluentd, is a lightweight version of Fluentd with one big advantage over its counterpart (in my usecase), Fluent Bit has an **azure_logs_ingestion** module which enables the forwarding of logs directly through to the Azure Monitor Logs ingestion API. That's an advantage over Fluentd which enables log forwarding only through a Azure agent running on the server, the agentless approach gives more freedom and flexibility of the Syslog Server setup. 
+
+Now here stems a question, Fluent Bit and Rsyslog have similar capabilities, both can recieve logs from local and remote hosts, both can forward logs to remote hosts and both are capable of saving logs locally, so why not just use Fluent Bit?  The only thing Rsyslog lacks are the capabilites of the before mentioned **azure_logs_ingestion** module but that doesn't make it inferior, Rsyslog outshines Fluent Bit with its performance, filtering and processing capabilites (although the current load of 4 logs doesn't require that much :D). In this usecase Fluent Bit's efficiency and compatability with Azure's Log Ingestion API make it a perfect companion service.
+
+The Rsyslog and Fluent Bit services will be containerized and not for the hype around containers. Containers provide actual value, they make the applications more stable and make the devolpment process a pleasurable expirience (depending on what you develop, of course). Since containers are isolated and all of the dependencies are located within it, any changes or depency version mismatches on the host machine don't break the application within the container and deployment can be as easy as building the container image and running it.
+
+### Rsyslog
+The Rsyslog service will be run using the official rsyslog container image, which offers the benefit of just configuring it and opening the ports in the **Dockerfile**. 
+
 ## The Server Setup
-The server is installed into a Oracle VirtualBox VM, using ```ubuntu-24.04.2-live-server-amd64``` iso image. Thus creating the empty VM which will serve the purpose of the Syslog Server.
+The server is installed into a Oracle VirtualBox VM, using the ```ubuntu-24.04.2-live-server-amd64``` iso image. Thus creating the empty VM which will serve the purpose of the Syslog Server.
 
 ### Getting to root
 Because this is a fresh install of Ubuntu Server (and I forgot to set the password during installation) the ```root``` user is inaccessible through the ```su``` command. This will not work as further actions require the access to root (and it's inadviseable to have root without a password). To do that I can access the root shell through my user and set the password:
