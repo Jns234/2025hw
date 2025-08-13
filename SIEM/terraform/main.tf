@@ -8,6 +8,10 @@ terraform {
     azapi = {
       source = "azure/azapi"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 3.5.0"
+    }
   }
 
   required_version = ">= 1.12.2"
@@ -21,7 +25,9 @@ provider "azurerm" {
 provider "azapi" {
   skip_provider_registration = false
 }
-
+provider "azuread" {
+  tenant_id = "60de868c-e210-483f-9be3-490593ef9d52"
+}
 
 resource "azurerm_resource_group" "log_ingestion" {
   name     = "log_ingestion_rg"
@@ -129,16 +135,14 @@ resource "azurerm_monitor_data_collection_rule" "log_ingestion_dcr" {
 
 }
 
-data "azurerm_subscription" "primary" {
-}
+#import {
+#  id = "/subscriptions/346d4e74-e2a3-41a6-aeff-88dae8d0e89d/resourceGroups/log_ingestion_rg/providers/Microsoft.Insights/dataCollectionRules/ingested_dcr/providers/Microsoft.Authorization/roleAssignments/b7168961-afb4-46da-a1ed-2faa811be5c0"
+#  to = azurerm_role_assignment.log_ingestion_access
+#}
 
-data "azurerm_monitor_data_collection_rule" "log_ingestion_dcr" {
-  name                = "ingested_dcr"
-  resource_group_name = azurerm_resource_group.log_ingestion.name
-}
 
 resource "azurerm_role_assignment" "log_ingestion_access" {
-  scope                = data.azurerm_subscription.primary.id
+  scope                = azurerm_monitor_data_collection_rule.log_ingestion_dcr.id
   role_definition_name = "Monitoring Metrics Publisher"
-  principal_id         = data.azurerm_monitor_data_collection_rule.log_ingestion_dcr.id
+  principal_id         = "c03c0625-3e39-44b0-9f70-6b08becc0cbf"
 }
