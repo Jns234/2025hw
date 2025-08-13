@@ -1,13 +1,8 @@
 - hosts: syslog_server
   vars_files:
     - ./../group_vars/secrets.yaml
-  become: yes
   become_user: sysloguser
   tasks:
-    - name: Adding user sysloguser 
-      user: name=sysloguser
-            group=docker
-            append=yes
     - name: Create the docker folders
       ansible.builtin.file:
         path: "{{ item }}"
@@ -17,7 +12,7 @@
         - /home/sysloguser/syslog-docker/rsyslog/
       tags: 
         - propagate 
-        - redeploy 
+        - deploy 
     - name: Copy the docker files to the source folder
       ansible.builtin.copy:
         src: "./../../{{ item }}"
@@ -29,7 +24,7 @@
         - 'fluent-bit/'
       tags: 
         - propagate 
-        - redeploy 
+        - deploy 
     - name: Copy the fluent template
       ansible.builtin.template:
         src: "./../../fluent-bit/conf/fluent-bit.conf.j2"
@@ -37,12 +32,14 @@
         force: True
       tags: 
         - propagate 
-        - redeploy 
+        - deploy 
     - name: Destroy docker compose services
       community.docker.docker_compose_v2:
         project_src: /home/sysloguser/syslog-docker/
         state: absent
-      tags: destroy 
+      tags: 
+        - destroy 
+        - deploy 
     - name: create and deploy docker compose services
       community.docker.docker_compose_v2:
         project_src: /home/sysloguser/syslog-docker/
@@ -50,4 +47,4 @@
         build: always
       tags: 
         - create 
-        - redeploy 
+        - deploy 

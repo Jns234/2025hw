@@ -29,6 +29,32 @@ Will also remove the user's password to make sure that it can't be accessed by a
 Then the **sysloguser** can be granted sudoers rights, which can be added in the **/etc/sudoers.d/** direcotory, in this example a file sysloguser is added:
 ![Image showing /etc/shadow config.](./../img/sysloguserSudoer.png)
 
+## Configuring the machine with ansible
+
+### The packages and dependencies
+Since the server will be running the **rsyslog** and **fluent bit** services in containers, the necesarry packages and dependencies must be provisioned. The ```/syslogServer/ansible/playbooks/apt.yaml```. To run the playbook:
+```
+ansible-playbook ./playbooks/apt.yaml -i ./inventory/hosts.yaml --user sysloguser
+```
+
+### Adding syslog user to the docker group
+To make sure that the **sysloguser** can use the ```docker-compose```, the user has to be in the **docker** group. For that purpose the  ```/syslogServer/ansible/playbooks/user.yaml``` can be used:
+```
+ansible-playbook ./playbooks/user.yaml -i ./inventory/hosts.yaml --user sysloguser
+```
+
+### Deploying the container to the machine
+Once the necessary dependecies are in place and the **sysloguser** is part of the **docker** group the **docker** application can be deployed onto the Syslog Server using the **deploy** tag:
+```
+ansible-playbook ./playbooks/docker.yaml -i ./inventory/hosts.yaml --user sysloguser --tags deploy
+```
+
+Other tag options include:
+- **propagate** - Will distirbute all of the configuration files.
+- **destroy** - Will stop and delete the current **docker** deployment on the Syslog Server.
+- **create** - Will rebuild the **Docker** images and the deploy.
+
+
 
 ## How to create an image
 In order to run the the Rsyslog server container, a local image must be built using the **Dockerfile**.
