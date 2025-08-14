@@ -146,3 +146,9 @@ resource "azurerm_role_assignment" "log_ingestion_access" {
   role_definition_name = "Monitoring Metrics Publisher"
   principal_id         = "c03c0625-3e39-44b0-9f70-6b08becc0cbf"
 }
+
+
+resource "azurerm_sentinel_log_analytics_workspace_onboarding" "ingestion_sentinel" {
+  workspace_id                 = azurerm_log_analytics_workspace.log_ingestion_law.id
+  customer_managed_key_enabled = false
+}
