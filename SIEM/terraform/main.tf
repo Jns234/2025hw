@@ -12,9 +12,21 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 3.5.0"
     }
-  }
 
+  }
+  backend "azurerm" {
+      resource_group_name  = "tfstate"
+      storage_account_name = "tfstatehxt93"
+      container_name       = "tfstate"
+      key                  = "terraform.tfstate"
+  }
   required_version = ">= 1.12.2"
+}
+
+resource "random_string" "resource_code" {
+  length  = 5
+  special = false
+  upper   = false
 }
 
 provider "azurerm" {
