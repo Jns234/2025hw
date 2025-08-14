@@ -13,7 +13,7 @@ chmod +x ./logTool.sh
 
 Once the execution rights have been assigned, the programme needs to be used with the **log file** full path, **destination host** and **destination port**. An example looks like the following:
 ```
-./logTool.sh -f /mnt/c/Users/Jan/Desktop/2025hw/shellTool/logs.log -a 192.168.1.7 -p 514
+./logTool.sh -f /mnt/c/Users/Jan/Desktop/2025hw/shellTool/logs.log -a 192.168.1.7 -p 51400
 ```
 ![Image showing the Log Reading Tool output.](./../img/logTool.png)
 

@@ -5,8 +5,8 @@ services:
       context: ./rsyslog/
       dockerfile: Dockerfile
     ports:
-      - "514:514/udp"
-      - "514:514/tcp"
+      - "5140:5140/udp"
+      - "5140:5140/tcp"
     volumes:
       - /sb:/sb
     restart: always
@@ -17,7 +17,7 @@ services:
       context: ./fluent-bit/
       dockerfile: Dockerfile
     ports:
-      - "515:515/tcp"
+      - "515:515/tcp" # This can be removed and is not necessary for the functioning of the server
     restart: always
     networks:
       - syslog-net

@@ -10,8 +10,8 @@ COPY ./conf/50-default.conf /etc/rsyslog.d/50-default.conf
 
 #COPY ./conf/fluent-bit.conf /etc/fluent-bit/fluent-bit.conf
 
-EXPOSE 514/udp
-EXPOSE 514/tcp
+EXPOSE 5140/udp
+EXPOSE 5140/tcp
 
 #RUN chmod +x /start.sh
 #CMD [ "/start.sh" ]
