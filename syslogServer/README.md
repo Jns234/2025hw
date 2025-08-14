@@ -8,7 +8,26 @@ Now here stems a question, Fluent Bit and Rsyslog have similar capabilities, bot
 The Rsyslog and Fluent Bit services will be containerized and not for the hype around containers. Containers provide actual value, they make the applications more stable and make the devolpment process a pleasurable expirience (depending on what you develop, of course). Since containers are isolated and all of the dependencies are located within it, any changes or depency version mismatches on the host machine don't break the application within the container and deployment can be as easy as building the container image and running it.
 
 ### Rsyslog
-The Rsyslog service will be run using the official rsyslog container image, which offers the benefit of just configuring it and opening the ports in the **Dockerfile**. 
+The Rsyslog service will be run using the official rsyslog container image, which offers the benefit of just configuring it and opening the ports in the **Dockerfile**. The configuration files are ```syslogServer/rsyslog/conf/rsyslog.conf``` and ```rsyslog/conf/50-default.conf```. ```syslogServer/rsyslog/conf/rsyslog.conf```is configured to open up udp and tcp ports 514, storaging all of the incoming network logs in the format `/sb/logs/incoming/$year/$month/$day/$fromhost_ip/syslog.log` and exclude localhost logs from that. ```rsyslog/conf/50-default.conf``` formats the log into json and forwards those to Fluent Bit.
+
+### Fluent Bit
+Same as Rsyslog, the service will run in its own container and changes are only needed in the configuration and Dockerfile. The Fluent Bit configuration listens for logs on a port and forwards these logs to a table in Azure Log Analytics Workspace.
+
+### Running the containers - locally
+To be able to run the services locally, the `syslogServer/fluent-bit/conf/fluent-bit.conf` file must be exist locally. All in all, there are two ways to get the service running, either using the dedicated Docker files with with locally built images:
+```
+/syslogServer/rsyslog/Dockerfile$ docker build -t rsyslogserver .
+/syslogServer/fluent-bit/Dockerfile$ docker build -t fluentbitserver .
+```
+ ```
+ docker run --name rsyslog -d -p 514:514/udp 514:514/tcp docker.io/library/rsyslogserver
+ docker run --name fluent-bit -d -p 515:515/tcp docker.io/library/fluentbitserver
+ ```
+ The other option is with **docker-compose**:
+ ```
+/syslogServer$ sudo docker-compose build 
+/syslogServer$ sudo docker compose up -d
+ ```
 
 ## The Server Setup
 The server is installed into a Oracle VirtualBox VM, using the ```ubuntu-24.04.2-live-server-amd64``` iso image. Thus creating the empty VM which will serve the purpose of the Syslog Server.
