@@ -24,7 +24,7 @@ More details could be found on [SIEM README](SIEM/README.md)
 
 ### The Flow
 The flow starts off with sending the logs using the **Log Reading Tool**:
-![Image showing the Log Reading Tool output.](./img/logToolOutPut.png)
+![Image showing the Log Reading Tool output.](./img/logToolOutput.png)
 
 Once the logs are sent we can see that they are saved in the correct path format:
 ![Image showing the correct log path.](./img/logsSaved.png)
