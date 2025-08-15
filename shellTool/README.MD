@@ -13,7 +13,7 @@ chmod +x ./logTool.sh
 
 Once the execution rights have been assigned, the programme needs to be used with the **log file** full path, **destination host** and **destination port**. An example looks like the following:
 ```
-./logTool.sh -f /mnt/c/Users/Jan/Desktop/2025hw/shellTool/logs.log -a 192.168.1.7 -p 51400
+./logTool.sh -f /mnt/c/Users/Jan/Desktop/2025hw/shellTool/logs.log -a 192.168.1.7 -p 5140
 ```
 ![Image showing the Log Reading Tool output.](./../img/logTool.png)
 
@@ -35,8 +35,3 @@ h     The help page!
 ```
 ### Running on WSL
 Due to conflicting EOL when developing the script and running on WSL, the EOL needs to be changed LF from CRLF. Due to the way git behaves, every time it's commited it changes the EOL to CRLF.
-
-## Explanation
-The author initially wanted to create this tool using Python, since they are more familiar with the language and have created plenty of scripts and small applications using it. The idea of creating the application as Bash script posed as an interesting challenge to the author and thus they decided to create the tool using Bash.
-
-Why use the ```logger``` commad? In any other scenario it would've made more sense to setup ```rsyslog``` on the log source machine and have it forward the logs to the **Syslog server**. Since the task required to read the logs and to send those to the **Syslog server** as a standalone tool, then the ```logger``` command's ability to send logs to a remote syslog server instead of to the system log socket became really useful.

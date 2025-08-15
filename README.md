@@ -1,5 +1,42 @@
 # Log Management System - Homework Assignment
 
+## The Task
+The task had 3 parts to it, 1. **Log Reading Tool**, 2. **Syslog Server** nad 3. **SIEM tool.**
+
+### The Log Reading Tool
+The Log Reading Tool is a simple bash script that check for the availability of a given host and sends logs to it. Since the sample data had empty lines, the author interpreted it as part of the task and added the ability to send logs with and without those empty lines.
+
+The author initially wanted to create this tool using Python, since they are more familiar with the language and have created plenty of scripts and small applications using it. The idea of creating the application as Bash script posed as an interesting challenge to the author and thus they decided to create the tool using Bash.
+
+Why use the ```logger``` commad? In any other scenario it would've made more sense to setup ```rsyslog``` on the log source machine and have it forward the logs to the **Syslog server**. Since the task required to read the logs and to send those to the **Syslog server** as a standalone tool, then the ```logger``` command's ability to send logs to a remote syslog server instead of to the system log socket became really useful.
+
+More details could be found on [dedicated log tool README](shellTool/README.MD)
+
+### The Syslog Server
+The configuration of the Syslog Server and SIEM is done using IaC tools like Ansible and Terraform. Using IaC tools enable to reproduce the desired state of the server in a consistent manner and for the goals of this task enables to showcase the configuration of the Syslog sevrer. 
+
+More details could be found on [Syslog Server README](syslogServer/README.md)
+
+### The SIEM Tool
+The SIEM tool chosen for this task is Azure Sentinel as the author already had experience in using it and had experience in configuring it using Terraform.
+
+More details could be found on [SIEM README](SIEM/README.md)
+
+### The Flow
+The flow starts off with sending the logs using the **Log Reading Tool**:
+![Image showing the Log Reading Tool output.](./img/logToolOutPut.png)
+
+Once the logs are sent we can see that they are saved in the correct path format:
+![Image showing the correct log path.](./img/logsSaved.png)
+
+And the content of those logs:
+![Image showing the correct logs.](./img/savedLogLines.png)
+
+And in the end we can see the **TRAFFIC** logs in the SIEM tool:
+![Image showing the SIEM output.](./img/siemTool.png)
+
+# Original Task
+
 ## Sample Log Data
 
 Below are examples of the logs that will be processed by our system:
@@ -33,3 +70,4 @@ Provide documentation with the following evidence:
 - Explanation of your solution.
 
 Please use own github repository.
+
